@@ -1,0 +1,7 @@
+open CMD (non admin)
+go to directory
+"node server.js"
+
+
+on client 
+enter http://10.12.3.89:3000
