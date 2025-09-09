@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lab Chat</title>
+  <style>
+    /* Overall dark gaming theme */
+    body {
+      background-color: #0f0f1a;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ccc;
+      margin: 0; 
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #chat-container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      width: 400px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px #00ffffaa;
+    }
+
+    h2 {
+      text-align: center;
+      background-color: #0f3460;
+      color: #00ffff;
+      margin: 0;
+      padding: 15px 0;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      text-transform: uppercase;
+      user-select: none;
+      box-shadow: inset 0 0 10px #00ffff88;
+    }
+
+   
+
+    #chat {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 15px;
+      background-color: #0a0a23;
+      border-left: 4px solid #00ffff;
+      border-right: 4px solid #00ffff;
+      scrollbar-width: thin;
+      scrollbar-color: #00ffff #0a0a23;
+      font-size: 0.9rem;
+    }
+
+    /* Scrollbar for WebKit browsers */
+    #chat::-webkit-scrollbar {
+      width: 8px;
+    }
+    #chat::-webkit-scrollbar-track {
+      background: #0a0a23;
+    }
+    #chat::-webkit-scrollbar-thumb {
+      background-color: #00ffff;
+      border-radius: 10px;
+      border: 2px solid #0a0a23;
+    }
+
+    /* Chat message container */
+    .message {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      max-width: 90%;
+    }
+
+    .message .username {
+      color: #00ffff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+      text-shadow: 0 0 8px #00ffff88;
+    }
+
+    .message .text {
+      background-color: #16213e;
+      color: #ccc;
+      padding: 8px 12px;
+      border-radius: 12px;
+      box-shadow: 0 0 6px #00ffffbb;
+      word-wrap: break-word;
+      user-select: text;
+    }
+
+    /* File links style */
+    .message a {
+      color: #00b8ff;
+      text-decoration: none;
+      font-weight: 600;
+      text-shadow: 0 0 6px #00b8ff88;
+    }
+    .message a:hover {
+      text-decoration: underline;
+    }
+
+    /* Input area */
+    #input-area {
+      display: flex;
+      flex-direction: column; 
+      padding: 15px;
+      background: #0f0f1a;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      border-top: 2px solid #00ffff;
+      gap: 10px;
+    }
+
+    #message {
+      flex-grow: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 1rem;
+      background-color: #16213e;
+      color: #eee;
+      box-shadow: inset 0 0 6px #00ffffbb;
+      outline: none;
+      transition: background-color 0.3s ease;
+    }
+    #message::placeholder {
+      color: #7fbfff;
+    }
+    #message:focus {
+      background-color: #1a2a50;
+      box-shadow: 0 0 10px #00ffffcc;
+    }
+
+    button {
+      background-color: #00ffff;
+      color: #091921;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 0 14px #00ffffbb;
+      transition: background-color 0.3s ease, color 0.2s ease;
+    }
+    button:hover {
+      background-color: #00b8ff;
+      color: #e0faff;
+      box-shadow: 0 0 20px #00bbffaa;
+    }
+    button:active {
+      background-color: #0099cc;
+      box-shadow: 0 0 10px #0099ccaa;
+    }
+
+    /* File input styling */
+    #fileInput {
+      border-radius: 10px;
+      padding: 10px;
+      background: #16213e;
+      border: none;
+      color: #ccc;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: inset 0 0 6px #00ffffbb;
+    }
+    #fileInput::-webkit-file-upload-button {
+      background: #00ffff;
+      border: none;
+      padding: 5px 10px;
+      margin-right: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #091921;
+      box-shadow: 0 0 10px #00ffffbb;
+      transition: background-color 0.3s ease;
+    }
+    #fileInput::-webkit-file-upload-button:hover {
+      background-color: #00b8ff;
+      color: #e0faff;
+    }
+
+      h3 {
+      text-align: right;
+      color: #00ffff;
+      margin: 0;
+      font-weight: 500;
+      font-size: 0.5rem;
+      letter-spacing: 1px;
+      border-top-left-radius: 100px;
+      border-top-right-radius: 0px;
+      user-select: none;
+      box-shadow: inset 0 0 6px #00ffff88;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <h2>Lab Chat</h2>
+    <div id="chat"></div>
+
+  <div id ="createdname">
+    <h3>~@Raza</h3>
+  </div>
+
+   <div id="input-area">
+  <div id="text-message-area" style="display: flex; gap: 10px; width: 100%;">
+    <input id="message" placeholder="Type your message..." autocomplete="off" />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <div id="file-upload-area" style="display: flex; gap: 10px; width: 100%;">
+    <input type="file" id="fileInput" />
+    <button onclick="sendFile()">Send File</button>
+  </div>
+</div>
+
+  <script>
+    let userName = "Anonymous";
+
+    window.onload = function() {
+      let inputName = prompt("Enter your name:");
+      if (inputName && inputName.trim().length > 0) {
+        userName = inputName.trim();
+      }
+
+      const ws = new WebSocket(`ws://${location.host}`);
+      const chat = document.getElementById('chat');
+      const input = document.getElementById('message');
+
+      ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+
+        if (msg.type === 'text') {
+          const usernameSpan = document.createElement('span');
+          usernameSpan.classList.add('username');
+          usernameSpan.textContent = msg.user;
+
+          const textSpan = document.createElement('span');
+          textSpan.classList.add('text');
+          textSpan.textContent = msg.data;
+
+          messageDiv.appendChild(usernameSpan);
+          messageDiv.appendChild(textSpan);
+        } else if (msg.type === 'file') {
+          const usernameSpan = document.createElement('span');
+          usernameSpan.classList.add('username');
+          usernameSpan.textContent = msg.user;
+
+          const fileLink = document.createElement('a');
+          fileLink.href = msg.data;
+          fileLink.download = msg.filename;
+          fileLink.textContent = `${msg.user} shared a file: ${msg.filename}`;
+
+          messageDiv.appendChild(usernameSpan);
+          messageDiv.appendChild(document.createElement('br'));
+          messageDiv.appendChild(fileLink);
+        }
+
+        chat.appendChild(messageDiv);
+        chat.scrollTop = chat.scrollHeight;
+      };
+
+      window.sendMessage = function() {
+        if (input.value.trim() !== "") {
+          ws.send(JSON.stringify({ type: 'text', user: userName, data: input.value.trim() }));
+          input.value = "";
+        }
+      };
+
+      window.sendFile = function() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64Data = reader.result;
+          ws.send(JSON.stringify({
+            type: 'file',
+            user: userName,
+            filename: file.name,
+            data: base64Data
+          }));
+        };
+        reader.readAsDataURL(file);
+      };
+
+      input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          sendMessage();
+        }
+      });
+    };
+  </script>
+</body>
+</html>
